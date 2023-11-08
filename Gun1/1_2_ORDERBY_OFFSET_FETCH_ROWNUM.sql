@@ -121,3 +121,13 @@ ORDER BY ListPrice ASC
     FETCH NEXT 3 ROWS ONLY;
 
 
+--------------------------
+DESC adv_product;
+
+SELECT
+    *
+FROM adv_Product
+WHERE Color IN ('Red','Black','Silver')
+      AND ListPrice <=100
+      AND (SafetyStockLevel BETWEEN 10 AND 100 OR ProductSubCategoryID IS NULL)
+ORDER BY SafetyStockLevel DESC
