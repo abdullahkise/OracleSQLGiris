@@ -145,5 +145,108 @@ WHERE ListPrice BETWEEN 100 AND 400; --alt ve üst s?n?r dahil.
     OR  : ifadenin herhangi bir taraf? True üretirse sonuç True olur.
     NOT : ifadenin sa??ndaki mant?ksal ?art? tersine çevirir.
 */
+--400'den pahal? k?rm?z? ürünler
+-- Color alan? Red olan ve ListPrice alan? 400'den büyük olanlar gelsin.
+SELECT
+    Name,
+    Color,
+    ListPrice
+FROM adv_Product
+--WHERE Color = 'Red' AND ListPrice >=400; -- her iki ?art? da sa?layanlar gelecek.
+WHERE Color = 'Red' AND ListPrice >=&fiyat; -- fiyat isimli de?i?ken tan?mlad?k. her çal??mada de?er ister.
+/* 
+    &degiskenAdi ile gecici bir de?i?ken tan?mlanabilir.
+    Kullan?c?dan al?nan de?er sorguda kullan?labilir.
+    
+    Detaylar de?i?ken tan?mlama bölümünde olacak.
+    
+    &fiyat ile de?i?ken tan?mlad?k . Sorgu her çal??t???nda de?i?ken de?eri kullan?c?ndan istendi.
+    girilen de?er sorguda kullan?ld?.
+*/
+
+--Q&A: ListPrice alan? 100-400 aras?nda olup, Color alan? Red veya Yellow olmayanlar ürünler gelsin.
+SELECT
+    Name,
+    Color,
+    ListPrice
+FROM adv_Product
+--WHERE (ListPrice BETWEEN 100 AND 400) AND (Color != 'Red' AND Color != 'Yellow'); --parentez ile i?lem önceli?i belirtilebilir.
+WHERE (ListPrice BETWEEN 100 AND 400) AND NOT(Color = 'Red' OR Color = 'Yellow'); --yukar?daki ile ayn?.
+
+/*
+    Üyelik Operatorleri:
+    IN(AlternatiflerDegerler): Uyesi mi? OR kullan?m? ile ayn? mant?k.
+    NOT IN (AlternatifDegerler): Uyesi de?il mi?
+*/
+--Color alan? Red, Silver, Black, Yellow olan ürünler gelesin
+SELECT
+    Name,
+    Color,
+    ListPrice
+FROM adv_Product
+--WHERE Color = 'Red' OR Color = 'Silver' OR Color = 'Black' OR Color = 'Yellow';
+WHERE Color IN ('Red','Silver','Yellow','Black');
+
+--!Q&A: Color alan? Red veya Black olmayanlar gelsin
+SELECT
+    Name,
+    Color,
+    ListPrice
+FROM adv_Product
+--WHERE Color != 'Red' AND Color!='Black';
+--WHERE NOT Color IN ('Red','Black');
+WHERE Color NOT IN ('Red','Black'); --tercih edilir.
+
+--!Q&A: Rengi olmayan yani Color aln?nda null yazanlar gelsin.
+SELECT *
+FROM adv_product
+WHERE Color = NULL; --Bir ayarla kullan?labilir. --HATA 'NULL'; --'(null)';
+
+/*
+    NULL
+    Veritaban?nda yoklu?u kar??l???d?r. Fakat bu de?er özel olarak yönetilmelidir.
+    NULL kay?tlar gelsin veya NULL = NULL gibi ifadeler bo? döner.
+    
+    IS NULL : bu Null m??
+    IS NOT NULL: bu Null de?il mi?
+    
+    NVL fonksiyonu null ise bir de?er yazmam?z? sa?lar.
+*/
+
+SELECT *
+FROM adv_product
+WHERE Color IS NULL;
+
+--Q&A: ListPrice alan? 100-1000 aras?nda olan rengi tan?ml? ürünler gelsin.
+SELECT
+    Name,
+    Color,
+    ListPrice
+FROM adv_Product
+WHERE (ListPrice >=100 AND ListPrice<=1000) AND Color IS NOT NULL; --NOT Color IS NULL
 
 
+/*
+    DISTINCT
+    ile tekrarl? kay?tlardan kurtulabiliriz.
+    farkl? olanlar? getirir.
+    
+    Bütün kolonlar göz önünde tutularak farkl? olanlar sat?rlar? getirir.
+*/
+-- ürünlerde hangi renkler kullan?lm??
+SELECT DISTINCT
+    Color
+FROM adv_Product;
+
+--NVL ile null için yedek de?er belirleyebiliriz.
+--as ile alias yani kolona takma ad verileilir. as kullan?lmasa da alis verilebiir ama as kullan?m?na al??al?m.
+SELECT DISTINCT
+    NVL(Color,'Bilinmiyor') Renk --as "Ürün rengi" --Renk, bo?luk varsa " kullan?lmal?r.
+FROM adv_Product;
+
+--Kaç tan?ml? renk var, kaç farkl? ren var. Daha sonra detayland?r?lacak.
+--COUNT fonksiyonu NULL olmayan de?erleri sayar.
+SELECT
+    COUNT(Color) as "Renkli Urunler",
+    COUNT(DISTINCT Color) as "Kaç Farkl? renk kullan??m??"
+FROM adv_Product;
