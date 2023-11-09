@@ -89,4 +89,33 @@ WHERE REGEXP_LIKE(LastName,'a{2}','i') OR REGEXP_LIKE(LastName,'e{2}','i'); --2 
 SELECT DISTINCT
     FirstName
 FROM adv_Person
-WHERE REGEXP_LIKE(FirstName,'^[kj]','i')
+WHERE REGEXP_LIKE(FirstName,'^[kj]','i');
+
+
+/*
+    Q&A: FirstName alan?na bakal?m
+        - 1. karakter k veya j olsun
+        - 2. karekter keyfi
+        - 3. karekter m olsun
+    
+    geri kalanlar keyfi olsun.
+*/
+SELECT DISTINCT
+    FirstName 
+FROM adv_Person
+WHERE REGEXP_LIKE(FirstName,'^[kj].{1}m','i');
+
+/*
+    Q&A: FirstName alan?na bakal?m
+        - 1. karekter a olsun
+        - 2. karekter keyfi
+        - 3. a ile k aras?nda olmas?n
+        - 4. keyfi
+        - 5. karekter m olsun
+        
+        sonrakiler keyfi olsun
+*/
+SELECT DISTINCT
+    FirstName 
+FROM adv_Person
+WHERE REGEXP_LIKE(FirstName,'')
