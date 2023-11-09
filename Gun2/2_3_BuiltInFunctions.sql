@@ -63,6 +63,7 @@ SELECT
     EXTRACT(month from CURRENT_DATE), --ay?n? veri
     EXTRACT(day from CURRENT_DATE), --gününü ver.
     
+    TRUNC(SYSDATE), --sadece tarihi verir. saat ve dakika gibi de?erleri k?rpar.
     TRUNC(CURRENT_DATE, 'MONTH'), --Aya göre yuvarlad?. Ay?n ilk gününü verdi.
     
     LAST_DAY(CURRENT_DATE), --Ay?n son gününe ait tarih
@@ -70,7 +71,11 @@ SELECT
     NEXT_DAY(CURRENT_DATE,'FRIDAY'), --önümüzdeki cuma hangi tarihe denk geliyor.
     NEXT_DAY('09-NOV-23','FRIDAY'), --'09-NOV-23' metnini oracle otomatik tarih olarak alg?lar.
     
-    MONTHS_BETWEEN(CURRENT_DATE, '01-JAN-2023') --iki tarih aras?nda kaç ay var.
+    MONTHS_BETWEEN(CURRENT_DATE, '01-JAN-2023'), --iki tarih aras?nda kaç ay var.
+    
+    --gün ve ay ekleme çözümü a?a??daki gibi. di?er zamanlar buna göre üretilir.
+    CURRENT_DATE - 7, --7 gün öncesi
+    ADD_MONTHS(CURRENT_DATE,-1) -- bir ay öncesi
 FROM dual;
 
 /*
