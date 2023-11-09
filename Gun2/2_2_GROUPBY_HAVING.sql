@@ -91,3 +91,32 @@ HAVING COUNT(*)<=20
 ORDER BY Gender DESC, 
          MaritalStatus ASC, 
          COUNT(*) DESC; -- birden fazla kolona göre s?ralama yap?labilir.
+
+/*
+--Q&A: CustomerKey de?eri 100 000 alt?nda olan mü?ter için
+    Sipari? y?llar?na ve bölgesine göre kaç adet sipari? talebi var, toplam ve ortalama sipari? tutar? nedir
+    Toplam Sipari? 1000'den fazla olan grup gelsin. Grubu filtreliyoruz.
+*/
+SELECT
+    SalesTerritoryKey,
+    EXTRACT(year from OrderDate), --tarih kolonunda y?l? say? olarak elde etmemizi sa?layan fonksiyon EXTRACT
+    SalesAmount,
+    SalesOrderNumber,
+    CustomerKey
+FROM adv_FactInternetSales;
+
+--
+-- Say?lar? ROUND ile yuvarlar?z 0.768 = 0.76, TRUNC 0.954 = 0.95 ile ondal?k k?smlar? k?rpabiliriz.
+SELECT
+    SalesTerritoryKey as "Sat?? Bölgesi",
+    EXTRACT(year from OrderDate) as "Y?l", --2. s?radaki kolon. Order By da s?ra numaras? verebiliriz.
+    TRUNC(SUM(SalesAmount),2) as "Toplam Tutar",
+    ROUND(AVG(SalesAmount),2) as "Ortalama Tutar",
+    COUNT(SalesOrderNumber) as "Toplam Sipari?"
+FROM adv_FactInternetSales
+WHERE CustomerKey <=100000
+GROUP BY SalesTerritoryKey,
+         EXTRACT(year from OrderDate)
+HAVING COUNT(SalesOrderNumber) > 1000 -- Toplam Sipari? 1000'den fazla olanlar
+ORDER BY SalesTerritoryKey, 
+         2 DESC; --y?la göre tersten s?rala
