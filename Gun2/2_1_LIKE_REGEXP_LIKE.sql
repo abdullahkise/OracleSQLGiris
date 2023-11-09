@@ -118,4 +118,4 @@ WHERE REGEXP_LIKE(FirstName,'^[kj].{1}m','i');
 SELECT DISTINCT
     FirstName 
 FROM adv_Person
-WHERE REGEXP_LIKE(FirstName,'')
+WHERE REGEXP_LIKE(FirstName,'^a.{1}[^a-k].{1}m','i');--Autumn
