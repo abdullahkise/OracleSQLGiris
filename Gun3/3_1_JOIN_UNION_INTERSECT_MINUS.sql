@@ -57,6 +57,7 @@ INSERT INTO Adv_Katilimcilar VALUES(6,4,'B Calisan?');
 
 INSERT INTO Adv_Katilimcilar VALUES(7,5,'?irketi Olmayan Calisan');
 
+COMMIT;
 --
 SELECT * FROM Adv_Katilimcilar;
 
@@ -197,9 +198,103 @@ GROUP BY t.Name
 ORDER BY 2 DESC
     FETCH FIRST 5 ROWS ONLY;
     
+/*
+    JOIN ile farkl? tablolardaki kolonlar? yanyana getirirken
+    UNION ve UNION ALL ile farkl? tabloardaki sat?rlar? alt alta getirebiliyoruz.
+    
+    UNION : Tekrars?z olanlar? yazar.
+    UNION ALL: Tüm sat?rlar? birle?tirir.
+    
+    Kolonlar?n adlar? önemli de?il. Fakat veri tipleri önemlidir.
+    Yani ayn? veritipine sahip ayn? s?rada kolonlar belirtilmelidir.
+*/
+
+SELECT * FROM adv_Katilimcilar;
+
+--
+CREATE TABLE Adv_Personeller
+(
+    PersonelId int,
+    SirketId int,
+    PersonelAd nvarchar2(50)
+);
+
+INSERT INTO Adv_Personeller VALUES(1,1,'Ali Uçan');
+INSERT INTO Adv_Personeller VALUES(2,1,'Veli Kaçan');
+INSERT INTO Adv_Personeller VALUES(3,1,'Abdullah Kise');
+
+--
+COMMIT;
+
+--
+SELECT * FROM Adv_Personeller;
+SELECT * FROM Adv_Katilimcilar;
+
+--
+--Tüm ki?ileri alal?m
+SELECT 
+   -- KatilimciId, 
+    KatilimciAd 
+FROM Adv_Katilimcilar
+
+--UNION --tekil
+UNION ALL --tekrarl? da olsa tüm sat?rlar gelir.
+
+SELECT 
+    --PersonelId, 
+    PersonelAd 
+FROM Adv_Personeller;
+
+
+/*
+    MINUS: Fark kümesini verir.
+*/
+SELECT 
+    KatilimciAd 
+FROM Adv_Katilimcilar
+MINUS -- Yukardakinde olup a?a??dakinde olmayanlar gelsin.
+SELECT 
+    PersonelAd 
+FROM Adv_Personeller;
+
+/*
+    INTERSECT: Kesi?im kümesini getirir
+*/
+SELECT 
+    KatilimciAd 
+FROM Adv_Katilimcilar
+INTERSECT -- her iki tabloda da olanlar? getirir.
+SELECT 
+    PersonelAd 
+FROM Adv_Personeller;
+
+-----------------------
+/*
+    Temel transaction kavram?
+*/
+
+--Kay?tlar? silmek için TRUNCATE veya DELETE kullanabiliriz. TRUNCATE geri al?namaz.
+DELETE Adv_Sirket; --WHere ile ?art konmazsa tüm tablo silinir.
+
+SELECT * FROM Adv_Sirket;
+
+ROLLBACK; --Oturumdaki her ?eyi geri al?r. En son commit edilen yere kadar gider.
+--COMMIT; -- Oturumdaki her ?eyi kal?c? hale getirir.
+
+SELECT * FROM Adv_Sirket;
+
+/*
+    Bilinçli Transaction Yönetimi
+*/
+TRUNCATE TABLE Adv_Sirket; --TRUNCATE Kal?c? siler.
+ROLLBACK;-- Geri al?namaz.
+--
+SELECT * FROM Adv_Sirket;
+
+---
+INSERT INTO Adv_Sirket VALUES (1,'XXXX','XXXXXXXX');
+SELECT * FROM Adv_Sirket;
+
+
     
     
-    
-    
-    
- 
