@@ -196,3 +196,10 @@ FROM Adv_SalesTerritory t FULL JOIN adv_Customer c
 GROUP BY t.Name
 ORDER BY 2 DESC
     FETCH FIRST 5 ROWS ONLY;
+    
+    
+    
+    
+    
+    
+ 
